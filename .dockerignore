@@ -1,0 +1,23 @@
+# Ignore all logfiles and tempfiles.
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+# IDE config files
+.idea
+.vscode
+.DS_Store
+
+deployments/
+vendor/
+
+.env*
+.dockerignore
+.gitignore
+.gitlab-ci.yml
+
+gateway-config.yml*
+
+Dockerfile
+README.md

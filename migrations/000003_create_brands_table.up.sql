@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS brands
+(
+    id          SERIAL PRIMARY KEY,
+    name        VARCHAR   NOT NULL UNIQUE,
+    image_url   VARCHAR,
+    location_id INTEGER   NOT NULL REFERENCES locations ("id") ON UPDATE CASCADE ON DELETE CASCADE,
+    created_at  TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at  TIMESTAMP NOT NULL DEFAULT NOW()
+);
