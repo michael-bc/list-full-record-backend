@@ -8,6 +8,18 @@ volumes:
   list-full-record-postgresql:
 
 services:
+  list-full-record-fe:
+    build:
+      context: ../../../list-full-record-frontend
+      args:
+        REACT_APP_API_BASE_URL: http://52.21.74.114:8080
+    container_name: list-full-record-fe
+    restart: always
+    ports:
+      - "80:3000"
+    networks:
+      - list-full-record-net
+
   list-full-record-be:
     build: ../../
     container_name: list-full-record-be
@@ -18,6 +30,8 @@ services:
       - "8080:8080"
     env_file:
       - list-full-record-be.env
+    volumes:
+      - ../scripts/wait-for-it.sh:/wait-for-it.sh
     entrypoint: /wait-for-it.sh postgres:5432 -- ./app
     networks:
       - list-full-record-net
