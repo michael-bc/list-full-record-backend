@@ -1,0 +1,38 @@
+version: "3.8"
+
+networks:
+  list-full-record-net:
+    driver: bridge
+
+volumes:
+  list-full-record-postgresql:
+
+services:
+  list-full-record-be:
+    build: ../../
+    container_name: list-full-record-be
+    restart: always
+    depends_on:
+      - list-full-record-postgresql
+    ports:
+      - "8080:8080"
+    env_file:
+      - list-full-record-be.env
+    entrypoint: /wait-for-it.sh postgres:5432 -- ./app
+    networks:
+      - list-full-record-net
+
+  list-full-record-postgresql:
+    image: postgres:14
+    container_name: list-full-record-postgresql
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - list-full-record-postgresql:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: list-full-record
+    networks:
+      - list-full-record-net
