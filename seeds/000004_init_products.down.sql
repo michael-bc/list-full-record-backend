@@ -1,5 +1,1 @@
-DELETE
-    FROM
-        brands
-    WHERE
-        name IN ('Nestle', 'Coca Cola', 'Seattle', 'Dallas', 'Miami');
+DELETE FROM products WHERE true;
