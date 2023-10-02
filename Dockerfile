@@ -11,7 +11,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o ./app ./cmd/list-full-record-backend \
+RUN go build -o ./app ./cmd/list-full-record \
     && chmod +x ./app
 
 
