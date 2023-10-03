@@ -10,13 +10,28 @@ volumes:
 services:
   list-full-record-fe:
     build:
-      context: ../../../list-full-record-frontend
+      context: ../../../list-full-record-front
       args:
-        REACT_APP_API_BASE_URL: http://52.21.74.114:8080
+        REACT_APP_API_BASE_URL: http://52.21.74.114:8081
     container_name: list-full-record-fe
     restart: always
     ports:
-      - "80:3000"
+      - "80:80"
+    networks:
+      - list-full-record-net
+
+  list-full-record-be-migrations:
+    image: migrate/migrate
+    container_name: list-full-record-be-migrations
+    restart: on-failure
+    depends_on:
+      - list-full-record-postgresql
+    volumes:
+      - ../scripts/wait-for-it.sh:/wait-for-it.sh
+      - ../../migrations:/migrations
+      - ../../seeds:/seeds
+    entrypoint: [ ]
+    command: sh -c "/wait-for-it.sh list-full-record-postgresql:5432 -- migrate -path=/migrations/ -database \"postgresql://postgres:postgres@list-full-record-postgresql:5432/list-full-record?sslmode=disable\" up && migrate -path=/seeds/ -database \"postgresql://postgres:postgres@list-full-record-postgresql:5432/list-full-record?sslmode=disable&x-migrations-table=schema_test_seeds\" up"
     networks:
       - list-full-record-net
 
@@ -27,12 +42,12 @@ services:
     depends_on:
       - list-full-record-postgresql
     ports:
-      - "8080:8080"
+      - "8081:8080"
     env_file:
       - list-full-record-be.env
     volumes:
       - ../scripts/wait-for-it.sh:/wait-for-it.sh
-    entrypoint: /wait-for-it.sh postgres:5432 -- ./app
+    entrypoint: /wait-for-it.sh list-full-record-postgresql:5432 -- ./app
     networks:
       - list-full-record-net
 
